@@ -28,7 +28,7 @@ const KanbanBoard = () => {
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 300,
+        distance: 3,
       },
     })
   );
@@ -44,6 +44,14 @@ const KanbanBoard = () => {
   const deleteColumn = (id: Id) => {
     const filteredArray = columns.filter((col) => col.id !== id);
     setColumns(filteredArray);
+  };
+
+  const updateColumnTitle = (id: Id, value: string) => {
+    const newColumns = columns.map((col) => {
+      if (col.id !== id) return col;
+      return { ...col, title: value };
+    });
+    setColumns(newColumns);
   };
 
   const onDragStartHandler = (event: DragStartEvent) => {
@@ -84,6 +92,7 @@ const KanbanBoard = () => {
                   key={col.id}
                   column={col}
                   deleteColumn={deleteColumn}
+                  updateColumnTitle={updateColumnTitle}
                 />
               ))}
             </SortableContext>
@@ -102,6 +111,7 @@ const KanbanBoard = () => {
               <ColumnContainer
                 column={activeColumn}
                 deleteColumn={deleteColumn}
+                updateColumnTitle={updateColumnTitle}
               />
             )}
           </DragOverlay>,
