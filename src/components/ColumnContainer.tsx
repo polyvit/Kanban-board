@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Column, Id, Task } from "../types";
 import TrashIcon from "../icons/TrashIcon";
 import { useSortable } from "@dnd-kit/sortable";
+import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import PlusIcon from "../icons/PlusIcon";
 import TaskCard from "./TaskCard";
@@ -26,6 +27,7 @@ const ColumnContainer: React.FC<ColumnProps> = ({
   updateTask,
 }) => {
   const [editMode, setEditMode] = useState<boolean>(false);
+  const tasksIds = useMemo(() => tasks.map((task) => task.id), [tasks]);
   const {
     setNodeRef,
     attributes,
@@ -53,7 +55,7 @@ const ColumnContainer: React.FC<ColumnProps> = ({
         ref={setNodeRef}
         style={style}
         className="bg-columnBackgroundColor w-[350px] h-[500px] max-h-[500px] rounded-md flex flex-col opacity-60 border-2 border-rose-500"
-      ></div>
+      />
     );
   }
 
@@ -96,14 +98,16 @@ const ColumnContainer: React.FC<ColumnProps> = ({
         </button>
       </div>
       <div className="flex flex-grow flex-col gap-4 p-2 overflow-y-auto overflow-x-hidden">
-        {tasks.map((task) => (
-          <TaskCard
-            key={task.id}
-            task={task}
-            deleteTask={deleteTask}
-            updateTask={updateTask}
-          />
-        ))}
+        <SortableContext items={tasksIds}>
+          {tasks.map((task) => (
+            <TaskCard
+              key={task.id}
+              task={task}
+              deleteTask={deleteTask}
+              updateTask={updateTask}
+            />
+          ))}
+        </SortableContext>
       </div>
       <button
         className="flex gap-2 items-center border-columnBackgroundColor border-2 rounded-md p-4 border-x-columnBackgroundColor hover:bg-mainBackgroundColor hover:text-rose-500 active:bg-black"

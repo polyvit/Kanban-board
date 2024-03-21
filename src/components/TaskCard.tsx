@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Id, Task } from "../types";
 import TrashIcon from "../icons/TrashIcon";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 interface TaskProps {
   task: Task;
@@ -12,14 +14,51 @@ const TaskCard: React.FC<TaskProps> = ({ task, deleteTask, updateTask }) => {
   const [isOverTask, setIsOverTask] = useState<boolean>(false);
   const [editMode, setEditMode] = useState<boolean>(false);
 
+  const {
+    setNodeRef,
+    attributes,
+    listeners,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: task.id,
+    data: {
+      type: "Task",
+      task,
+    },
+    disabled: editMode,
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
   const toggleEditMode = () => {
     setEditMode((prev) => !prev);
     setIsOverTask(false);
   };
 
+  if (isDragging) {
+    return (
+      <div
+        className="opacity-30 bg-mainBackgroundColor p-2.5 h-[100px] min-h-[100px] flex items-center rounded-xl  cursor-grab relative border-2 border-rose-500"
+        ref={setNodeRef}
+        style={style}
+      />
+    );
+  }
+
   if (editMode) {
     return (
-      <div className="bg-mainBackgroundColor p-2.5 h-[100px] min-h-[100px] flex items-center rounded-xl hover:ring-2 hover:ring-inset hover:ring-rose-500 cursor-grab relative">
+      <div
+        className="bg-mainBackgroundColor p-2.5 h-[100px] min-h-[100px] flex items-center rounded-xl hover:ring-2 hover:ring-inset hover:ring-rose-500 cursor-grab relative"
+        ref={setNodeRef}
+        style={style}
+        {...attributes}
+        {...listeners}
+      >
         <textarea
           className="h-[90%] w-full resize-none rounded bg-transparent text-white focus:outline-none"
           value={task.content}
@@ -37,6 +76,10 @@ const TaskCard: React.FC<TaskProps> = ({ task, deleteTask, updateTask }) => {
 
   return (
     <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
       className="bg-mainBackgroundColor p-2.5 h-[100px] min-h-[100px] flex items-center rounded-xl hover:ring-2 hover:ring-inset hover:ring-rose-500 cursor-grab relative task"
       onMouseEnter={() => setIsOverTask(true)}
       onMouseLeave={() => setIsOverTask(false)}
