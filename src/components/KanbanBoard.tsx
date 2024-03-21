@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import PlusIcon from "../icons/PlusIcon";
-import { Column, Id } from "../types";
+import { Column, Id, Task } from "../types";
 import { generateId } from "../utils/common";
 import ColumnContainer from "./ColumnContainer";
 import {
@@ -23,6 +23,7 @@ import { createPortal } from "react-dom";
 const KanbanBoard = () => {
   const [columns, setColumns] = useState<Column[]>([]);
   const [activeColumn, setActiveColumn] = useState<Column | null>(null);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const columnsIds = useMemo(() => columns.map((col) => col.id), [columns]);
 
   const sensors = useSensors(
@@ -41,9 +42,23 @@ const KanbanBoard = () => {
     setColumns([...columns, newColumn]);
   };
 
+  const createTask = (id: Id) => {
+    const newTask = {
+      id: generateId(),
+      columnId: id,
+      content: `Task ${tasks.length + 1}`,
+    };
+    setTasks([...tasks, newTask]);
+  };
+
   const deleteColumn = (id: Id) => {
     const filteredArray = columns.filter((col) => col.id !== id);
     setColumns(filteredArray);
+  };
+
+  const deleteTask = (id: Id) => {
+    const filteredTasks = tasks.filter((task) => task.id !== id);
+    setTasks(filteredTasks);
   };
 
   const updateColumnTitle = (id: Id, value: string) => {
@@ -93,6 +108,9 @@ const KanbanBoard = () => {
                   column={col}
                   deleteColumn={deleteColumn}
                   updateColumnTitle={updateColumnTitle}
+                  createTask={createTask}
+                  tasks={tasks.filter((task) => task.columnId === col.id)}
+                  deleteTask={deleteTask}
                 />
               ))}
             </SortableContext>
@@ -112,6 +130,11 @@ const KanbanBoard = () => {
                 column={activeColumn}
                 deleteColumn={deleteColumn}
                 updateColumnTitle={updateColumnTitle}
+                createTask={createTask}
+                tasks={tasks.filter(
+                  (task) => task.columnId === activeColumn.id
+                )}
+                deleteTask={deleteTask}
               />
             )}
           </DragOverlay>,

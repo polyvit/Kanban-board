@@ -1,19 +1,27 @@
 import React, { useState } from "react";
-import { Column, Id } from "../types";
+import { Column, Id, Task } from "../types";
 import TrashIcon from "../icons/TrashIcon";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import PlusIcon from "../icons/PlusIcon";
+import TaskCard from "./TaskCard";
 
 interface ColumnProps {
   column: Column;
+  tasks: Task[];
   deleteColumn(id: Id): void;
   updateColumnTitle(id: Id, value: string): void;
+  createTask(columnId: Id): void;
+  deleteTask(id: Id): void;
 }
 
 const ColumnContainer: React.FC<ColumnProps> = ({
   column,
   deleteColumn,
   updateColumnTitle,
+  createTask,
+  tasks,
+  deleteTask,
 }) => {
   const [editMode, setEditMode] = useState<boolean>(false);
   const {
@@ -85,8 +93,18 @@ const ColumnContainer: React.FC<ColumnProps> = ({
           <TrashIcon />
         </button>
       </div>
-      <div className="flex flex-grow">Content</div>
-      <div>Footer</div>
+      <div className="flex flex-grow flex-col gap-4 p-2 overflow-y-auto overflow-x-hidden">
+        {tasks.map((task) => (
+          <TaskCard key={task.id} task={task} deleteTask={deleteTask} />
+        ))}
+      </div>
+      <button
+        className="flex gap-2 items-center border-columnBackgroundColor border-2 rounded-md p-4 border-x-columnBackgroundColor hover:bg-mainBackgroundColor hover:text-rose-500 active:bg-black"
+        onClick={() => createTask(column.id)}
+      >
+        <PlusIcon />
+        Add Task
+      </button>
     </div>
   );
 };
