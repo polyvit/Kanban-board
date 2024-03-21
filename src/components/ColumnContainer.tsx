@@ -13,6 +13,7 @@ interface ColumnProps {
   updateColumnTitle(id: Id, value: string): void;
   createTask(columnId: Id): void;
   deleteTask(id: Id): void;
+  updateTask(id: Id, content: string): void;
 }
 
 const ColumnContainer: React.FC<ColumnProps> = ({
@@ -22,6 +23,7 @@ const ColumnContainer: React.FC<ColumnProps> = ({
   createTask,
   tasks,
   deleteTask,
+  updateTask,
 }) => {
   const [editMode, setEditMode] = useState<boolean>(false);
   const {
@@ -95,7 +97,12 @@ const ColumnContainer: React.FC<ColumnProps> = ({
       </div>
       <div className="flex flex-grow flex-col gap-4 p-2 overflow-y-auto overflow-x-hidden">
         {tasks.map((task) => (
-          <TaskCard key={task.id} task={task} deleteTask={deleteTask} />
+          <TaskCard
+            key={task.id}
+            task={task}
+            deleteTask={deleteTask}
+            updateTask={updateTask}
+          />
         ))}
       </div>
       <button
