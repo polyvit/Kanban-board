@@ -1,21 +1,13 @@
 import React, { useMemo, useState } from "react";
-import { Column, Id, Task } from "../types";
+import { ColumnProps } from "../types";
 import TrashIcon from "../icons/TrashIcon";
 import { useSortable } from "@dnd-kit/sortable";
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import PlusIcon from "../icons/PlusIcon";
 import TaskCard from "./TaskCard";
-
-interface ColumnProps {
-  column: Column;
-  tasks: Task[];
-  deleteColumn(id: Id): void;
-  updateColumnTitle(id: Id, value: string): void;
-  createTask(columnId: Id): void;
-  deleteTask(id: Id): void;
-  updateTask(id: Id, content: string): void;
-}
+import { Button } from "../elements/Button/Button";
+import { Input } from "../elements/Input/Input";
 
 const ColumnContainer: React.FC<ColumnProps> = ({
   column,
@@ -77,7 +69,7 @@ const ColumnContainer: React.FC<ColumnProps> = ({
           </div>
           {!editMode && column.title}
           {editMode && (
-            <input
+            <Input
               className="bg-black focus:border-rose-500 border-rounded outline-none px-2"
               value={column.title}
               autoFocus
@@ -90,12 +82,12 @@ const ColumnContainer: React.FC<ColumnProps> = ({
             />
           )}
         </div>
-        <button
-          onClick={() => deleteColumn(column.id)}
+        <Button
+          clickHandler={() => deleteColumn(column.id)}
           className="stroke-gray-500 hover:stroke-white hover:bg-columnBackgroundColor rounded px-1 py-2"
         >
           <TrashIcon />
-        </button>
+        </Button>
       </div>
       <div className="flex flex-grow flex-col gap-4 p-2 overflow-y-auto overflow-x-hidden">
         <SortableContext items={tasksIds}>
@@ -109,13 +101,13 @@ const ColumnContainer: React.FC<ColumnProps> = ({
           ))}
         </SortableContext>
       </div>
-      <button
-        className="flex gap-2 items-center border-columnBackgroundColor border-2 rounded-md p-4 border-x-columnBackgroundColor hover:bg-mainBackgroundColor hover:text-rose-500 active:bg-black"
-        onClick={() => createTask(column.id)}
+      <Button
+        clickHandler={() => createTask(column.id)}
+        className="flex gap-2 cursor-pointer border-2 items-center border-columnBackgroundColor rounded-md p-4 border-x-columnBackgroundColor hover:bg-mainBackgroundColor hover:text-rose-500 active:bg-black"
       >
         <PlusIcon />
         Add Task
-      </button>
+      </Button>
     </div>
   );
 };

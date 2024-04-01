@@ -16,6 +16,7 @@ import {
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import { createPortal } from "react-dom";
 import TaskCard from "./TaskCard";
+import { Button } from "../elements/Button/Button";
 
 const KanbanBoard = () => {
   const [columns, setColumns] = useState<Column[]>([]);
@@ -164,13 +165,13 @@ const KanbanBoard = () => {
               ))}
             </SortableContext>
           </div>
-          <button
-            onClick={() => createNewColumn()}
-            className="flex gap-2 h-[60px] w-[350px] min-w-[350px] cursor-pointer rounded-lg bg-mainBackgroundColor border-2 border-columnBackgroundColor p-4 ring-rose-500 hover:ring-2"
+          <Button
+            clickHandler={() => createNewColumn()}
+            className="flex gap-2 cursor-pointer border-2 h-[60px] w-[350px] min-w-[350px] rounded-lg bg-mainBackgroundColor border-columnBackgroundColor p-4 ring-rose-500 hover:ring-2"
           >
             <PlusIcon />
             Add column
-          </button>
+          </Button>
         </div>
         {createPortal(
           <DragOverlay>

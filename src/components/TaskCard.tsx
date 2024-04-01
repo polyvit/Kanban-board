@@ -1,14 +1,9 @@
 import React, { useState } from "react";
-import { Id, Task } from "../types";
+import { TaskProps } from "../types";
 import TrashIcon from "../icons/TrashIcon";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-
-interface TaskProps {
-  task: Task;
-  deleteTask(id: Id): void;
-  updateTask(id: Id, content: string): void;
-}
+import { Button } from "../elements/Button/Button";
 
 const TaskCard: React.FC<TaskProps> = ({ task, deleteTask, updateTask }) => {
   const [isOverTask, setIsOverTask] = useState<boolean>(false);
@@ -89,12 +84,12 @@ const TaskCard: React.FC<TaskProps> = ({ task, deleteTask, updateTask }) => {
         {task.content}
       </p>
       {isOverTask && (
-        <button
+        <Button
+          clickHandler={() => deleteTask(task.id)}
           className="stroke-white absolute right-4 opacity-60 hover:opacity-100"
-          onClick={() => deleteTask(task.id)}
         >
           <TrashIcon />
-        </button>
+        </Button>
       )}
     </div>
   );
