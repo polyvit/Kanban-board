@@ -41,6 +41,10 @@ const ColumnContainer: React.FC<ColumnProps> = ({
     transition,
   };
 
+  const countTasksPerColumn = () => {
+    return tasks.filter((task) => task.columnId === column.id).length;
+  };
+
   if (isDragging) {
     return (
       <div
@@ -65,7 +69,7 @@ const ColumnContainer: React.FC<ColumnProps> = ({
       >
         <div className="flex gap-2 items-center">
           <div className="flex justify-center items-center bg-columnBackgroundColor px-2 py-1 text-sm rounded-full">
-            0
+            {countTasksPerColumn()}
           </div>
           {!editMode && column.title}
           {editMode && (
