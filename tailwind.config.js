@@ -4,8 +4,8 @@ export default {
   theme: {
     extend: {
       colors: {
-        mainBackgroundColor: "#0D1117",
-        columnBackgroundColor: "#161C22",
+        mainBackgroundColor: "#227E9A",
+        columnBackgroundColor: "#52DBE5",
       },
     },
   },
