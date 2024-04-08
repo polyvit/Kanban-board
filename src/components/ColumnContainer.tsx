@@ -2,22 +2,19 @@ import React, { useMemo, useState } from "react";
 import { ColumnProps } from "../types";
 import TrashIcon from "../icons/TrashIcon";
 import { useSortable } from "@dnd-kit/sortable";
-import { SortableContext, arrayMove } from "@dnd-kit/sortable";
+import { SortableContext } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import PlusIcon from "../icons/PlusIcon";
 import TaskCard from "./TaskCard";
 import { Button } from "../elements/Button/Button";
 import { Input } from "../elements/Input/Input";
+import tasksStore from "../store/tasks-store";
+import columnsStore from "../store/columns-store";
+import { observer } from "mobx-react-lite";
 
-const ColumnContainer: React.FC<ColumnProps> = ({
-  column,
-  deleteColumn,
-  updateColumnTitle,
-  createTask,
-  tasks,
-  deleteTask,
-  updateTask,
-}) => {
+const ColumnContainer: React.FC<ColumnProps> = observer(({ column, tasks }) => {
+  const { updateColumnTitle, deleteColumn } = columnsStore;
+  const { createTask, deleteTasksWithColumn } = tasksStore;
   const [editMode, setEditMode] = useState<boolean>(false);
   const tasksIds = useMemo(() => tasks.map((task) => task.id), [tasks]);
   const {
@@ -87,7 +84,10 @@ const ColumnContainer: React.FC<ColumnProps> = ({
           )}
         </div>
         <Button
-          clickHandler={() => deleteColumn(column.id)}
+          clickHandler={() => {
+            deleteColumn(column.id);
+            deleteTasksWithColumn(column.id);
+          }}
           className="stroke-gray-500 hover:stroke-white hover:bg-columnBackgroundColor rounded px-1 py-2"
         >
           <TrashIcon />
@@ -96,12 +96,7 @@ const ColumnContainer: React.FC<ColumnProps> = ({
       <div className="flex flex-grow flex-col gap-4 p-2 overflow-y-auto overflow-x-hidden">
         <SortableContext items={tasksIds}>
           {tasks.map((task) => (
-            <TaskCard
-              key={task.id}
-              task={task}
-              deleteTask={deleteTask}
-              updateTask={updateTask}
-            />
+            <TaskCard key={task.id} task={task} />
           ))}
         </SortableContext>
       </div>
@@ -114,6 +109,6 @@ const ColumnContainer: React.FC<ColumnProps> = ({
       </Button>
     </div>
   );
-};
+});
 
 export default ColumnContainer;

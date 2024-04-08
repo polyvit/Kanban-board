@@ -4,8 +4,11 @@ import TrashIcon from "../icons/TrashIcon";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Button } from "../elements/Button/Button";
+import tasksStore from "../store/tasks-store";
+import { observer } from "mobx-react-lite";
 
-const TaskCard: React.FC<TaskProps> = ({ task, deleteTask, updateTask }) => {
+const TaskCard: React.FC<TaskProps> = observer(({ task }) => {
+  const { deleteTask, updateTask } = tasksStore;
   const [isOverTask, setIsOverTask] = useState<boolean>(false);
   const [editMode, setEditMode] = useState<boolean>(false);
 
@@ -93,6 +96,6 @@ const TaskCard: React.FC<TaskProps> = ({ task, deleteTask, updateTask }) => {
       )}
     </div>
   );
-};
+});
 
 export default TaskCard;
